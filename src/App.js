@@ -1,26 +1,40 @@
-import React from 'react';
-import { Switch, Route} from 'react-router-dom';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Switch, Route, withRouter } from 'react-router-dom';
 
 import HomePage from './pages/HomePage';
 import PostPage from './pages/PostPage';
 import TodoPage from './pages/TodoPage';
 import SettingPage from './pages/SettingPage';
-import AuthPage from './pages/AuthPage';
+import SignInPage from './pages/SignInPage';
+import SignUpPage from './pages/SignUpPage';
 import Header from './components/header/Header';
 
-const App = () => {
-  return (
-    <div>
-      <Header />
-      <Switch>
-        <Route exact path='/' component={HomePage} />
-        <Route path='/post' component={PostPage} />
-        <Route path='/todo' component={TodoPage} />
-        <Route path='/auth' component={AuthPage} />
-        <Route path='/setting' component={SettingPage} />
-      </Switch>
-    </div>
-  );
+class App extends Component {
+  render() {
+    const currentUser = this.props.currentUser;
+
+    return (
+        <div>
+          <Header currentUser={currentUser} />
+          <Switch>
+            <Route exact path='/' component={HomePage} />
+            <Route path='/post' component={PostPage} />
+            <Route path='/todo' component={TodoPage} />
+            <Route path='/signin' component={SignInPage} />
+            <Route path='/signup' component={SignUpPage} />
+            <Route path='/setting' component={SettingPage} />
+          </Switch>
+        </div>
+      );
+  }; 
 }
 
-export default App;
+const mapStateToProps = state => ({
+  currentUser: state.authReducer.currentUser
+});
+
+export default withRouter(connect(
+  mapStateToProps,
+  {}
+)(App));

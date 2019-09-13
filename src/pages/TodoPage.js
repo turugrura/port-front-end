@@ -6,8 +6,11 @@ import TodoList from '../components/todo/TodoList';
 
 class TodoPage extends Component {
     componentDidMount() {
+        if (!this.props.currentUser.token) {
+            return this.props.history.push('/');
+        };
+        
         this.props.fetchTodos();
-        // this.props.fetchTodo('5d66a378db07203ef433b520');
     };
 
     render() {
@@ -26,7 +29,8 @@ class TodoPage extends Component {
 }
 
 const mapStateToProps = state => ({
-    todos: state.todoReducer.todos
+    todos: state.todoReducer.todos,
+    currentUser: state.authReducer.currentUser
 });
 
 const mapDispatchToProps = {

@@ -34,10 +34,10 @@ const Comment = props => {
                 className={customStyles.cardHeader}
                 avatar={
                     <Avatar >
-                        {`${author}`.substr(0,1).toUpperCase()}
+                        {`${author.username}`.substr(0,1).toUpperCase()}
                     </Avatar>
                 }
-                title={author}
+                title={author.username}
                 subheader={getDateTime(createdAt)}
             />
             <CardContent

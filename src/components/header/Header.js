@@ -17,8 +17,66 @@ const useStyles = makeStyles( theme => ({
 // see https://github.com/ReactTraining/react-router/issues/6056
 const AdapterLink = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
 
-const Header = () => {
+const renderButtonWithAuth = (classes, isSignedIn) => {
+    if (isSignedIn) {
+        return (
+            <>
+                <Button
+                    to='/post'
+                    component={AdapterLink}
+                    color='inherit'
+                    className={classes.button}
+                >
+                    Post
+                </Button>
+                <Button
+                    to='/todo'
+                    component={AdapterLink}
+                    color='inherit'
+                    className={classes.button}
+                >
+                    Todo
+                </Button>
+                <div className={classes.flexGrow} />
+                <Button
+                    to='/Logout'
+                    component={AdapterLink}
+                    color='inherit'
+                    className={classes.button}
+                >
+                    Logout
+                </Button>
+            </>
+        );
+    } else {
+        return (
+            <>
+                <div className={classes.flexGrow} />
+                <Button
+                    to='/signin'
+                    component={AdapterLink}
+                    color='inherit'
+                    className={classes.button}
+                >
+                    SingIn
+                </Button>
+                <Button
+                    to='/signup'
+                    component={AdapterLink}
+                    color='inherit'
+                    className={classes.button}
+                >
+                    SignUp
+                </Button>
+            </>
+        );
+    }
+};
+
+const Header = (props) => {
     const classes = useStyles();
+    const isSignedIn = props.currentUser.token ? true : false;
+    console.log(props.currentUser)
 
     return (
         <div className={classes.flexGrow}>
@@ -31,32 +89,8 @@ const Header = () => {
                         color='inherit'
                     >
                         <Home />
-                    </IconButton>
-                    <Button
-                        to='/post'
-                        component={AdapterLink}
-                        color='inherit'
-                        className={classes.button}
-                    >
-                        Post
-                    </Button>
-                    <Button
-                        to='/todo'
-                        component={AdapterLink}
-                        color='inherit'
-                        className={classes.button}
-                    >
-                        Todo
-                    </Button>
-                    <div className={classes.flexGrow} />
-                    <Button
-                        to='/auth'
-                        component={AdapterLink}
-                        color='inherit'
-                        className={classes.button}
-                    >
-                        Login/Signup
-                    </Button>
+                    </IconButton>                    
+                    {renderButtonWithAuth(classes, isSignedIn)}
                 </Toolbar>
             </AppBar>
         </div>

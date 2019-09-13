@@ -7,7 +7,11 @@ import PostList from '../components/post/PostList';
 
 class PostPage extends Component {
     componentDidMount() {
-        this.props.fetchMyPosts('5d67f37228a9883cc4e085a9');
+        if (!this.props.currentUser.token) {
+            return this.props.history.push('/');
+        };
+        
+        this.props.fetchMyPosts(this.props.currentUser._id);
     };
 
     render() {
@@ -26,12 +30,13 @@ class PostPage extends Component {
 }
 
 const mapStateToProps = state => ({
-    posts: state.postReducer.posts
+    posts: state.postReducer.posts,
+    currentUser: state.authReducer.currentUser
 });
 
 const mapDispatchToProps = {
     fetchMyPosts
-}
+};
 
 export default connect(
     mapStateToProps,
