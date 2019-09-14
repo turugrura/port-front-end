@@ -1,6 +1,9 @@
 import {
     SIGN_IN,
-    SIGN_UP
+    SIGN_UP,
+    SIGN_OUT,
+    GET_ME,
+    CLEAR_CURRENT_USER
 } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
@@ -19,6 +22,21 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 currentUser: action.payload
             };
+        case SIGN_OUT:
+            return {
+                ...state,
+                currentUser: action.payload
+            };
+        case GET_ME:
+            return {
+                ...state,
+                currentUser: action.payload
+            }
+        case CLEAR_CURRENT_USER:
+            return {
+                ...state,
+                currentUser: action.payload
+            }
         default:
             return state;
     }

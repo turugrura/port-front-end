@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { fetchMyPosts, fetchAllPosts } from '../stores/actions/postAction';
-
 import PostList from '../components/post/PostList';
+import { sortByCreatedAt } from '../utils';
 
 class HomePage extends Component {
     componentDidMount() {
-        this.props.fetchAllPosts()
-    };
+        this.props.fetchAllPosts();
+    };    
 
     render() {
         if (this.props.posts.length === 0) {
@@ -19,7 +19,7 @@ class HomePage extends Component {
 
         return (
             <div>
-                <PostList posts={this.props.posts} />
+                <PostList posts={this.props.posts.sort(sortByCreatedAt)} />
             </div>
         );
     };

@@ -4,17 +4,17 @@ import {
     FETCH_TODOS
 } from './actionTypes';
 
-const fetchTodo = (userId = '') => async dispatch => {
+const fetchTodo = (userId = '', todoId = '') => async dispatch => {
     let todos = [];
     try {
-        todos = await myApi.get(`/users/${userId}/todos`);
-        if (todos.status === 200) {
-            todos = todos.data.data[0].todos;
+        const res = await myApi.get(`/users/${userId}/todos/${todoId}`);
+        if (res.status === 200) {
+            todos = res.data.data[0].todos;
         } else {
             todos = [];
         };
     } catch (error) {
-        console.log(error);
+        console.log(error.response);
         todos = [];
     }
     
@@ -24,17 +24,17 @@ const fetchTodo = (userId = '') => async dispatch => {
     });
 };
 
-const fetchTodos = () => async dispatch => {
+const fetchTodos = (userId) => async dispatch => {
     let todos
     try {
-        todos = await myApi.get('/todos');
-        if (todos.status === 200) {
-            todos = todos.data.data;
+        const res = await myApi.get(`/users/${userId}/todos`);
+        if (res.status === 200) {
+            todos = res.data.data[0].todos;
         } else {
             todos = [];
         };
     } catch (error) {
-        console.log(error);
+        console.log(error.response);
         todos = [];   
     }    
     

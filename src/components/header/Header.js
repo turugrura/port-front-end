@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { makeStyles, AppBar, Toolbar, Button, IconButton } from '@material-ui/core';
+import { makeStyles, AppBar, Toolbar, Button, IconButton, Typography } from '@material-ui/core';
 import { Home } from '@material-ui/icons';
 
 const useStyles = makeStyles( theme => ({
@@ -17,7 +17,9 @@ const useStyles = makeStyles( theme => ({
 // see https://github.com/ReactTraining/react-router/issues/6056
 const AdapterLink = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
 
-const renderButtonWithAuth = (classes, isSignedIn) => {
+const renderButtonWithAuth = (classes, currentUser) => {
+    const isSignedIn = currentUser.token ? true : false;
+
     if (isSignedIn) {
         return (
             <>
@@ -38,13 +40,19 @@ const renderButtonWithAuth = (classes, isSignedIn) => {
                     Todo
                 </Button>
                 <div className={classes.flexGrow} />
+                <Typography
+                    variant='h5'
+                    display='inline'
+                >
+                    {currentUser.username}
+                </Typography>
                 <Button
-                    to='/Logout'
+                    to='/signout'
                     component={AdapterLink}
                     color='inherit'
                     className={classes.button}
                 >
-                    Logout
+                    Sign out
                 </Button>
             </>
         );
@@ -58,7 +66,7 @@ const renderButtonWithAuth = (classes, isSignedIn) => {
                     color='inherit'
                     className={classes.button}
                 >
-                    SingIn
+                    Sing in
                 </Button>
                 <Button
                     to='/signup'
@@ -66,7 +74,7 @@ const renderButtonWithAuth = (classes, isSignedIn) => {
                     color='inherit'
                     className={classes.button}
                 >
-                    SignUp
+                    Sign up
                 </Button>
             </>
         );
@@ -75,7 +83,6 @@ const renderButtonWithAuth = (classes, isSignedIn) => {
 
 const Header = (props) => {
     const classes = useStyles();
-    const isSignedIn = props.currentUser.token ? true : false;
     console.log(props.currentUser)
 
     return (
@@ -90,7 +97,7 @@ const Header = (props) => {
                     >
                         <Home />
                     </IconButton>                    
-                    {renderButtonWithAuth(classes, isSignedIn)}
+                    {renderButtonWithAuth(classes, props.currentUser)}
                 </Toolbar>
             </AppBar>
         </div>

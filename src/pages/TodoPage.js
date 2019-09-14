@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchTodo, fetchTodos } from '../stores/actions/todoAction';
+import { fetchTodos } from '../stores/actions/todoAction';
 
 import TodoList from '../components/todo/TodoList';
+import { sortByCreatedAt } from '../utils';
 
 class TodoPage extends Component {
     componentDidMount() {
-        if (!this.props.currentUser.token) {
-            return this.props.history.push('/');
-        };
-        
-        this.props.fetchTodos();
+        this.props.fetchTodos(this.props.currentUser._id);
     };
 
     render() {
@@ -22,7 +19,7 @@ class TodoPage extends Component {
 
         return (
             <div>
-                <TodoList todos={this.props.todos} />
+                <TodoList todos={this.props.todos.sort(sortByCreatedAt)} />
             </div>
         );
     };
@@ -34,7 +31,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-    fetchTodo,
     fetchTodos
 };
 

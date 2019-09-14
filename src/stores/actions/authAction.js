@@ -2,7 +2,10 @@ import myApi from '../../api/port-back-end';
 
 import {
     SIGN_IN,
-    SIGN_UP
+    SIGN_UP,
+    SIGN_OUT,
+    GET_ME,
+    CLEAR_CURRENT_USER
 } from './actionTypes';
 
 const signIn = ({username, password}) => async dispatch => {
@@ -13,18 +16,19 @@ const signIn = ({username, password}) => async dispatch => {
             password
         });
         if (res.status === 200) {
-            console.log(res.data)
             user = {
                 ...res.data.data,
                 token: res.data.token
             }
-        } else {
-            user = {};
-        }
+            localStorage.setItem('jwt', user.token);
+        };
     } catch (error) {
-        console.log(error);
-        user = {};
-    }
+        console.log(error.response);
+        user = {
+            ...error.response.data,
+            status: error.response.status
+        };
+    };
 
     dispatch({
         type: SIGN_IN,
@@ -35,7 +39,7 @@ const signIn = ({username, password}) => async dispatch => {
 const signUp = ({username, password, title}) => async dispatch => {
     let user = {};
     try {
-        const res = await myApi.post('/users/login', {
+        const res = await myApi.post('/users/signup', {
             username,
             password,
             title
@@ -45,13 +49,15 @@ const signUp = ({username, password, title}) => async dispatch => {
                 ...res.data.data,
                 token: res.data.token
             }
-        } else {
-            user = {};
-        }
+            localStorage.setItem('jwt', user.token);
+        };
     } catch (error) {
-        console.log(error);
-        user = {};
-    }
+        console.log(error.response);
+        user = {
+            ...error.response.data,
+            status: error.response.status
+        };
+    };
 
     dispatch({
         type: SIGN_UP,
@@ -59,7 +65,65 @@ const signUp = ({username, password, title}) => async dispatch => {
     });
 };
 
+const signOut = (currentUser = {}) => async dispatch => {
+    try {
+        const res = await myApi.post('/users/logout', {}, {
+            headers: {
+                Authorization: `Bearer ${currentUser.token}`
+            }
+        });
+        if (res.status === 200) {
+            currentUser = {};
+            localStorage.removeItem('jwt');
+        };
+    } catch (error) {
+        console.log(error.response);        
+    };
+
+    dispatch({
+        type: SIGN_OUT,
+        payload: currentUser
+    });
+};
+
+const getMe = (token) => async dispatch => {
+    let user = {};
+    try {
+        const res = await myApi.get('/users/me', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        
+        if (res.status === 200) {
+            user = res.data.data[0];
+        };
+    } catch (error) {
+        console.log(error.response);
+        localStorage.removeItem('jwt');
+        user = {
+            ...error.response.data,
+            status: error.response.status
+        };
+    }
+
+    dispatch({
+        type: GET_ME,
+        payload: user
+    });
+};
+
+const clearCurrentUser = () => {
+    return ({
+        type: CLEAR_CURRENT_USER,
+        payload: {}
+    });
+};
+
 export {
     signIn,
-    signUp
+    signUp,
+    signOut,
+    getMe,
+    clearCurrentUser
 }
