@@ -12,9 +12,9 @@ const renderCommentList = (comments = []) => {
 
 const CommentList = props => {
     return (
-        <React.Fragment>
+        <div>
             {renderCommentList(props.comments)}
-        </React.Fragment>
+        </div>
     );
 };
 

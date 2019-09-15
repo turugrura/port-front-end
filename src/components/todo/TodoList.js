@@ -3,14 +3,18 @@ import React from 'react';
 import { makeStyles, List, ListItem, ListItemText } from '@material-ui/core';
 
 // import Todo from './Todo';
+import { getDateTime } from '../../utils';
 
 const useStyles = makeStyles( theme => ({
     root: {
         width: '100%',
         // backgroundColor: theme.palette.background.paper
     },
-    inline: {
-        display: 'inline'
+    content: {
+        padding: 0,
+        paddingLeft: 16,
+        'word-break':' break-word',
+        'white-space': 'pre-wrap'
     }
 }));
 
@@ -18,24 +22,9 @@ const renderTodoList = (customStyles, todos = []) => {
     return todos.map( todo => {
         return (
             <ListItem key={todo._id} alignItems='flex-start'>
-                {/* <ListItemText
-                    primary={todo.author}
-                    secondary={
-                        <React.Fragment>
-                            <Typography
-                                color='textPrimary'
-                                variant='body2'
-                                className={customStyles.inline}
-                                component='span'
-                            >
-                                {todo.topic}
-                            </Typography>
-                            {' - ' + todo.content}
-                        </React.Fragment>
-                    }
-                /> */}
                 <ListItemText
-                    primary={todo.topic}
+                    className={customStyles.content}
+                    primary={`${todo.topic} (Created: ${getDateTime(todo.createdAt)} Status: ${todo.status})`}
                     secondary={
                         todo.content
                     }
@@ -47,10 +36,6 @@ const renderTodoList = (customStyles, todos = []) => {
 
 const TodoList = ({ todos = [] }) => {
     const customStyles = useStyles();
-
-    if(todos.length === 0) {
-        return <div>Loading todos...</div>
-    };
 
     return (
         <List className={customStyles.root}>

@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route, withRouter, Redirect } from 'react-router-dom';
 
-import { getMe, signOut } from './stores/actions/authAction';
+import { setCurrentUser, signOut } from './store/actions/authAction';
 
-import HomePage from './pages/HomePage';
+// import HomePage from './pages/HomePage';
 import PostPage from './pages/PostPage';
 import TodoPage from './pages/TodoPage';
 import SettingPage from './pages/SettingPage';
@@ -15,9 +15,8 @@ import Header from './components/header/Header';
 
 class App extends Component {
   componentDidMount() {
-    console.log('App didmount');
     if (!this.props.currentUser.token && localStorage.getItem('jwt')) {
-      this.props.getMe(localStorage.getItem('jwt'));
+      this.props.setCurrentUser(localStorage.getItem('jwt'));
     };
   };
 
@@ -39,7 +38,7 @@ class App extends Component {
       />
     );
   };
-
+  
   render() {
     const currentUser = this.props.currentUser;
 
@@ -47,11 +46,11 @@ class App extends Component {
         <div>
           <Header currentUser={currentUser} />
           <Switch>
-            <Route exact path='/' component={HomePage} />
+            <Route exact path='/' component={PostPage} />
             <Route path='/signin' component={SignInPage} />
             <Route path='/signup' component={SignUpPage} />
             <this.PrivateRoute path='/signout' component={SignOutPage} />
-            <this.PrivateRoute path='/post' component={PostPage} />
+            <this.PrivateRoute exact path='/post' component={PostPage} />
             <this.PrivateRoute path='/todo' component={TodoPage} />
             <this.PrivateRoute path='/setting' component={SettingPage} />
             <Redirect to='/' />
@@ -66,7 +65,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  getMe,
+  setCurrentUser,
   signOut
 };
 

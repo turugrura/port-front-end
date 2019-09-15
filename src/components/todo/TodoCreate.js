@@ -15,32 +15,59 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const PostCreate = props => {
+const TodoCreate = props => {
     const classes = useStyles();
-    const [ content, setContent ] = useState('');
+    const [ todo, setTodo ] = useState({
+        topic: '',
+        content: ''
+    });
 
     const onSubmitForm = e => {
         e.preventDefault();
-        if (content.trim() === '') return ;
 
-        props.onCreatePost({ content });
-        setContent('');
+        props.onCreateTodo(todo);
+        setTodo({
+            topic: '',
+            content: ''
+        });
+    };
+
+    const onChange = e => {
+        setTodo({
+            ...todo,
+            [e.target.name]: e.target.value
+        })
     };
 
     return (
         <div>
             <form onSubmit={onSubmitForm}>
-                <Grid container spacing={0} >
-                    <Grid item xs={12} >
+                <Grid container spacing={1} >
+                    <Grid item xs={4} >
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            fullWidth
+                            label="Topic"
+                            required
+                            name="topic"
+                            autoComplete="off"
+                            onChange={onChange}
+                            value={todo.topic}
+                        />
+                    </Grid>
+                    <Grid item xs={8} >
                         <TextField
                             variant="outlined"
                             margin="normal"
                             fullWidth
                             multiline
-                            label="How are you?"
+                            name='content'
+                            required
+                            label="What you want todo?"
                             autoComplete="off"
-                            onChange={(e) => setContent(e.target.value)}
-                            value={content}
+                            onChange={onChange}
+                            value={todo.content}
                         />
                     </Grid>
                     <Grid item xs={3} >
@@ -52,7 +79,7 @@ const PostCreate = props => {
                             disableFocusRipple={true}
                             className={classes.submit}
                         >
-                            Post
+                            create
                         </Button>
                     </Grid>
                 </Grid>
@@ -62,4 +89,4 @@ const PostCreate = props => {
     );
 };
 
-export default PostCreate;
+export default TodoCreate;

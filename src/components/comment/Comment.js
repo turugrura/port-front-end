@@ -2,7 +2,7 @@ import React from 'react';
 
 import { makeStyles, Typography, Card, CardContent, CardHeader, Avatar } from '@material-ui/core';
 
-import { getDateTime } from '../../utils'
+import { getDateTime, getTitleDisplay } from '../../utils'
 
 const useStyles = makeStyles( theme => ({
     root: {
@@ -16,7 +16,9 @@ const useStyles = makeStyles( theme => ({
     },
     cardContent: {
         padding: 0,
-        paddingLeft: 16
+        paddingLeft: 16,
+        'word-break':' break-word',
+        'white-space': 'pre-wrap'
     },
     cardActions: {
         padding: 0,
@@ -34,10 +36,10 @@ const Comment = props => {
                 className={customStyles.cardHeader}
                 avatar={
                     <Avatar >
-                        {`${author.username}`.substr(0,1).toUpperCase()}
+                        {`${author.title}`.substr(0,1).toUpperCase()}
                     </Avatar>
                 }
-                title={author.username}
+                title={getTitleDisplay(author.title)}
                 subheader={getDateTime(createdAt)}
             />
             <CardContent

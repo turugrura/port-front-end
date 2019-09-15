@@ -4,8 +4,8 @@ import logger from 'redux-logger';
 import rootReducer from './reducers/rootReducer';
 
 const middlewares = [
-    logger,
-    reduxThunk
+    reduxThunk,
+    logger
 ];
 
 const store = createStore(rootReducer, applyMiddleware(...middlewares));

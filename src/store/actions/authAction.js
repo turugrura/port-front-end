@@ -4,7 +4,7 @@ import {
     SIGN_IN,
     SIGN_UP,
     SIGN_OUT,
-    GET_ME,
+    SET_CURRENT_USER,
     CLEAR_CURRENT_USER
 } from './actionTypes';
 
@@ -86,7 +86,7 @@ const signOut = (currentUser = {}) => async dispatch => {
     });
 };
 
-const getMe = (token) => async dispatch => {
+const setCurrentUser = (token) => async dispatch => {
     let user = {};
     try {
         const res = await myApi.get('/users/me', {
@@ -108,7 +108,7 @@ const getMe = (token) => async dispatch => {
     }
 
     dispatch({
-        type: GET_ME,
+        type: SET_CURRENT_USER,
         payload: user
     });
 };
@@ -124,6 +124,6 @@ export {
     signIn,
     signUp,
     signOut,
-    getMe,
+    setCurrentUser,
     clearCurrentUser
 }

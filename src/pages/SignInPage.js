@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 
-import { signIn, clearCurrentUser } from '../stores/actions/authAction';
+import { signIn, clearCurrentUser } from '../store/actions/authAction';
 
 import SignInComponent from '../components/auth/SignIn';
 

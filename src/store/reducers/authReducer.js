@@ -2,7 +2,7 @@ import {
     SIGN_IN,
     SIGN_UP,
     SIGN_OUT,
-    GET_ME,
+    SET_CURRENT_USER,
     CLEAR_CURRENT_USER
 } from '../actions/actionTypes';
 
@@ -27,7 +27,7 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 currentUser: action.payload
             };
-        case GET_ME:
+        case SET_CURRENT_USER:
             return {
                 ...state,
                 currentUser: action.payload

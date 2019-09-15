@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
+// import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -53,18 +53,39 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignIn(props) {
   const classes = useStyles();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [ user, setUser ] = useState({
+    username: window.localStorage.getItem('lastSignIn') || '',
+    password: '',
+    rememberMe: false
+  });
+
+  const onChange = e => {
+    let value;
+    if (e.target.name === 'rememberMe') {
+      value = e.target.checked;
+    } else {
+      value = e.target.value
+    };
+
+    setUser({
+      ...user,
+      [e.target.name]: value
+    });
+  };
 
   const onSubmit = e => {
-        e.preventDefault();
+    e.preventDefault();
 
-      props.onClickSubmit({username, password});
+    if (user.rememberMe) {
+      window.localStorage.setItem('lastSignIn', user.username);
+    };
+
+    props.onClickSubmit(user);
   };
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
+      {/* <CssBaseline /> */}
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
@@ -81,12 +102,12 @@ export default function SignIn(props) {
             margin="normal"
             required
             fullWidth
-            id="username"
             label="User Name"
             name="username"
             autoComplete="username"
             autoFocus
-            onChange={(e) => setUsername(e.target.value)}
+            defaultValue={user.username}
+            onChange={onChange}
           />
           <TextField
             variant="outlined"
@@ -96,12 +117,13 @@ export default function SignIn(props) {
             name="password"
             label="Password"
             type="password"
-            id="password"
             autoComplete="current-password"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={onChange}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
+            name='rememberMe'
+            onChange={onChange}
             label="Remember me"
           />
           <Button

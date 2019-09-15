@@ -1,6 +1,7 @@
 import {
     FETCH_TODO,
-    FETCH_TODOS
+    FETCH_TODOS,
+    CREATE_TODO
 } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
@@ -15,6 +16,11 @@ export default (state = INITIAL_STATE, action) => {
                 todos: action.payload
             };
         case FETCH_TODOS:
+            return {
+                ...state,
+                todos: action.payload
+            };
+        case CREATE_TODO:
             return {
                 ...state,
                 todos: action.payload

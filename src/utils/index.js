@@ -9,14 +9,27 @@ const getDateTime = (datetime = '') => {
             + dt.getMinutes().toString().padStart(2,'0');
 };
 
-const sortByCreatedAt = (x, y) => {
+const sortByCreatedAtAsc = (x, y) => {
+    const dateX = new Date(x.createdAt);
+    const dateY = new Date(y.createdAt);
+
+    return (dateX.getTime() - dateY.getTime());
+};
+
+const sortByCreatedAtDesc = (x, y) => {
     const dateX = new Date(x.createdAt);
     const dateY = new Date(y.createdAt);
 
     return -(dateX.getTime() - dateY.getTime());
 };
 
+const getTitleDisplay = (title = '') => {
+    return title.substr(0,10);
+};
+
 export {
     getDateTime,
-    sortByCreatedAt
+    sortByCreatedAtAsc,
+    sortByCreatedAtDesc,
+    getTitleDisplay
 }

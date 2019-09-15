@@ -3,8 +3,7 @@ import React, {useState} from 'react';
 import { makeStyles, Typography, Card, CardContent, CardHeader, CardActions, Avatar, IconButton } from '@material-ui/core';
 import { Favorite as FavoriteIcon, Comment as CommentIcon } from '@material-ui/icons';
 
-import { getDateTime } from '../../utils';
-import CommentList from '../comment/CommentList';
+import { getDateTime, getTitleDisplay } from '../../utils';
 import { red } from '@material-ui/core/colors';
 
 const useStyles = makeStyles( theme => ({
@@ -19,30 +18,32 @@ const useStyles = makeStyles( theme => ({
     },
     cardContent: {
         padding: 0,
-        paddingLeft: 16
+        paddingLeft: 16,
+        'word-break':' break-word',
+        'white-space': 'pre-wrap'
     },
     cardActions: {
         padding: 0,
         paddingLeft: 16
     },
     favoriteIcon: {
-        color: red[300]
+        color: red[400]
     }
 }));
 
-
-
 const Post = props => {
     const customStyles = useStyles();
-    const { authorName, content, comments, createdAt } = props.post;
+    const { title, content, like, comments, createdAt } = props.post;
     const [isOpenComment, setToggleOpenComment] = useState(false);
     const [isLike, setToggleLike] = useState(false);
 
     const onClickCommentIcon = () => {
+        if (!props.currentUser.token) return;        
         setToggleOpenComment(!isOpenComment);
     };
 
     const onClickFavoriteIcon = () => {
+        if (!props.currentUser.token) return;
         setToggleLike(!isLike);
     };
     
@@ -52,16 +53,16 @@ const Post = props => {
                 className={customStyles.cardHeader}
                 avatar={
                     <Avatar >
-                        {`${authorName}`.substr(0,1).toUpperCase()}
+                        {`${title}`.substr(0,1).toUpperCase()}
                     </Avatar>
                 }
-                title={authorName}
+                title={getTitleDisplay(title)}
                 subheader={getDateTime(createdAt)}
             />
             <CardContent
                 className={customStyles.cardContent}
             >
-                <Typography>
+                <Typography >
                     {content}
                 </Typography>
             </CardContent>
@@ -74,6 +75,7 @@ const Post = props => {
                     onClick={onClickFavoriteIcon}
                 >
                     <FavoriteIcon className={isLike ? customStyles.favoriteIcon : ''} />
+                    {` ${like.length}`}
                 </IconButton>
                 <IconButton
                     onClick={onClickCommentIcon}
@@ -83,11 +85,11 @@ const Post = props => {
                 </IconButton>
             </CardActions>
             {
-                isOpenComment && comments.length > 0
+                isOpenComment
                 ?   <CardContent>
-                        <CommentList comments={comments} />
+                        {props.children}
                     </CardContent>
-                :   <div></div>
+                :   null
             }            
         </Card>
     )

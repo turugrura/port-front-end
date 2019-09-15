@@ -11,22 +11,21 @@ import {
 // };
 
 const fetchMyPosts = (userId) => async dispatch => {
-    let posts;
+    let posts = [];
     try {
         const res = await myApi.get(`users/${userId}/posts/comments`);
         if (res.status === 200 && res.data.data.length > 0) {
-            const authorName = res.data.data[0].username;
+            const title = res.data.data[0].title;
             posts = res.data.data[0].posts.map( post => {
-                const comments = post.comments.map( cm => {
-                    return {
-                        ...cm
-                    };
-                });
+                // const comments = post.comments.map( cm => {
+                //     return {
+                //         ...cm
+                //     };
+                // });
 
                 return {
                     ...post,
-                    authorName,
-                    comments
+                    title
                 };
             });
         };
@@ -44,26 +43,16 @@ const fetchMyPosts = (userId) => async dispatch => {
 const fetchAllPosts = () => async dispatch => {
     let posts = [];
     try {
-        const res = await myApi.get('/users/posts/comments');
+        const res = await myApi.get('/posts/comments');
         if (res.status === 200) {
-            res.data.data.forEach( user => {
-                user.posts.forEach( post => {
-                    const comments = post.comments.map( cm => {
-                        return {
-                            ...cm
-                        };
-                    });
-
-                    posts.push({
-                        ...post,
-                        authorName: user.username,
-                        comments
-                    });
-                });
+            posts = res.data.data.map( post => {
+                return {
+                    ...post,
+                    author: post.author._id,
+                    title: post.author.title
+                };
             });
-        } else {
-            posts = [];
-        }
+        };
     } catch (error) {
         console.log(error.response);
         posts = [];
@@ -75,7 +64,7 @@ const fetchAllPosts = () => async dispatch => {
     });
 };
 
-const createPost = (currentUser, post) => async dispatch => {
+const createPost = (currentUser, post, fromPage = '/') => async dispatch => {
     let posts = [];
     try {
         const res = await myApi.post(`/posts`, post, {
@@ -89,23 +78,30 @@ const createPost = (currentUser, post) => async dispatch => {
     } catch (error) {
         console.log(error.response)
     } finally {
-        const res = await myApi.get(`users/${currentUser._id}/posts/comments`);
-        if (res.status === 200 && res.data.data.length > 0) {
-            const authorName = res.data.data[0].username;
-            posts = res.data.data[0].posts.map( post => {
-                const comments = post.comments.map( cm => {
+        if (fromPage === '/') {
+            const res = await myApi.get('/posts/comments');
+            if (res.status === 200) {
+                posts = res.data.data.map( post => {
                     return {
-                        ...cm
+                        ...post,
+                        author: post.author._id,
+                        title: post.author.title
                     };
                 });
-
-                return {
-                    ...post,
-                    authorName,
-                    comments
-                };
-            });
+            };
+        } else {
+            const res = await myApi.get(`/users/${currentUser._id}/posts/comments`);
+            if (res.status === 200 && res.data.data.length > 0) {
+                const title = res.data.data[0].title;
+                posts = res.data.data[0].posts.map( post => {
+                    return {
+                        ...post,
+                        title
+                    };
+                });
+            };
         };
+        
     }
 
     dispatch({

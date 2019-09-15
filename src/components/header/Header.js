@@ -2,14 +2,17 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import { makeStyles, AppBar, Toolbar, Button, IconButton, Typography } from '@material-ui/core';
-import { Home } from '@material-ui/icons';
+import { Home as HomeIcon, Settings as SettingsIcon, Input as InputIcon } from '@material-ui/icons';
 
 const useStyles = makeStyles( theme => ({
     flexGrow: {
         flexGrow: 1
     },
     button: {
-        margin: theme.spacing(2)
+        margin: theme.spacing(1)
+    },
+    signInIcon: {
+        margin: theme.spacing(0, 3, 0)
     }
 }));
 
@@ -41,19 +44,36 @@ const renderButtonWithAuth = (classes, currentUser) => {
                 </Button>
                 <div className={classes.flexGrow} />
                 <Typography
-                    variant='h5'
+                    variant='h6'
                     display='inline'
                 >
-                    {currentUser.username}
+                    {`${currentUser.title}`.substr(0,10)}
                 </Typography>
-                <Button
+                {/* <Button
                     to='/signout'
                     component={AdapterLink}
                     color='inherit'
                     className={classes.button}
                 >
                     Sign out
-                </Button>
+                </Button> */}
+                <IconButton
+                    to='/signout'
+                    component={AdapterLink}
+                    color='inherit'
+                    className={classes.signInIcon}
+                >
+                    <InputIcon />
+                </IconButton>
+                <IconButton
+                    to='/setting'
+                    component={AdapterLink}
+                    edge='start'
+                    color='inherit'
+                    // className={classes.signInIcon}
+                >
+                    <SettingsIcon />
+                </IconButton>
             </>
         );
     } else {
@@ -95,7 +115,7 @@ const Header = (props) => {
                         edge='start'
                         color='inherit'
                     >
-                        <Home />
+                        <HomeIcon />
                     </IconButton>                    
                     {renderButtonWithAuth(classes, props.currentUser)}
                 </Toolbar>

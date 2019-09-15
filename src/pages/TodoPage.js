@@ -1,25 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchTodos } from '../stores/actions/todoAction';
+import { fetchTodos, createTodo } from '../store/actions/todoAction';
 
 import TodoList from '../components/todo/TodoList';
-import { sortByCreatedAt } from '../utils';
+import TodoCreate from '../components/todo/TodoCreate';
+import { sortByCreatedAtDesc } from '../utils';
 
 class TodoPage extends Component {
     componentDidMount() {
         this.props.fetchTodos(this.props.currentUser._id);
     };
 
-    render() {
-        if (this.props.todos.length === 0) {
-            return (
-                <div>Loding todos...</div>
-            )
-        };
+    onCreateTodo = newTodo => {
+        this.props.createTodo(this.props.currentUser, newTodo);
+    };
 
+    render() {
         return (
             <div>
-                <TodoList todos={this.props.todos.sort(sortByCreatedAt)} />
+                <TodoCreate onCreateTodo={this.onCreateTodo} />
+                <TodoList todos={this.props.todos.sort(sortByCreatedAtDesc)} />
             </div>
         );
     };
@@ -31,7 +31,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-    fetchTodos
+    fetchTodos,
+    createTodo
 };
 
 export default connect(

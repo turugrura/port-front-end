@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const PostCreate = props => {
+const CommentCreate = props => {
     const classes = useStyles();
     const [ content, setContent ] = useState('');
 
@@ -23,7 +23,7 @@ const PostCreate = props => {
         e.preventDefault();
         if (content.trim() === '') return ;
 
-        props.onCreatePost({ content });
+        props.onCreateComment(props.postId, { content });
         setContent('');
     };
 
@@ -37,7 +37,7 @@ const PostCreate = props => {
                             margin="normal"
                             fullWidth
                             multiline
-                            label="How are you?"
+                            label="What you think about this post?"
                             autoComplete="off"
                             onChange={(e) => setContent(e.target.value)}
                             value={content}
@@ -52,7 +52,7 @@ const PostCreate = props => {
                             disableFocusRipple={true}
                             className={classes.submit}
                         >
-                            Post
+                            comment
                         </Button>
                     </Grid>
                 </Grid>
@@ -62,4 +62,4 @@ const PostCreate = props => {
     );
 };
 
-export default PostCreate;
+export default CommentCreate;
