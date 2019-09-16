@@ -2,7 +2,7 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import { makeStyles, AppBar, Toolbar, Button, IconButton, Typography } from '@material-ui/core';
-import { Home as HomeIcon, Settings as SettingsIcon, Input as InputIcon } from '@material-ui/icons';
+import { Home as HomeIcon, Settings as SettingsIcon, ExitToApp as ExitToAppIcon } from '@material-ui/icons';
 
 const useStyles = makeStyles( theme => ({
     flexGrow: {
@@ -48,31 +48,22 @@ const renderButtonWithAuth = (classes, currentUser) => {
                     display='inline'
                 >
                     {`${currentUser.title}`.substr(0,10)}
-                </Typography>
-                {/* <Button
-                    to='/signout'
-                    component={AdapterLink}
-                    color='inherit'
-                    className={classes.button}
-                >
-                    Sign out
-                </Button> */}
-                <IconButton
-                    to='/signout'
-                    component={AdapterLink}
-                    color='inherit'
-                    className={classes.signInIcon}
-                >
-                    <InputIcon />
-                </IconButton>
+                </Typography>                
                 <IconButton
                     to='/setting'
                     component={AdapterLink}
                     edge='start'
                     color='inherit'
-                    // className={classes.signInIcon}
+                    className={classes.signInIcon}
                 >
                     <SettingsIcon />
+                </IconButton>
+                <IconButton
+                    to='/signout'
+                    component={AdapterLink}
+                    color='inherit'
+                >
+                    <ExitToAppIcon />
                 </IconButton>
             </>
         );

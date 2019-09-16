@@ -15,16 +15,27 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const CommentCreate = props => {
+const CommentCreate = ({ onCreateComment, postId, comment, textButton, textLabel }) => {
     const classes = useStyles();
-    const [ content, setContent ] = useState('');
+    const [ newComment, setNewComment ] = useState({
+        content: comment ? comment.content : ''
+    });
 
     const onSubmitForm = e => {
         e.preventDefault();
-        if (content.trim() === '') return ;
+        if (newComment.content.trim() === '') return ;
 
-        props.onCreateComment(props.postId, { content });
-        setContent('');
+        onCreateComment(postId, newComment);
+        setNewComment({
+            content: ''
+        });
+    };
+
+    const onChange = e => {
+        setNewComment({
+            ...newComment,
+            [e.target.name]: e.target.value
+        })
     };
 
     return (
@@ -37,10 +48,11 @@ const CommentCreate = props => {
                             margin="normal"
                             fullWidth
                             multiline
-                            label="What you think about this post?"
+                            label={ textLabel ? textLabel : "What you think about this post?" }
                             autoComplete="off"
-                            onChange={(e) => setContent(e.target.value)}
-                            value={content}
+                            name='content'
+                            onChange={onChange}
+                            value={newComment.content}
                         />
                     </Grid>
                     <Grid item xs={3} >
@@ -52,7 +64,7 @@ const CommentCreate = props => {
                             disableFocusRipple={true}
                             className={classes.submit}
                         >
-                            comment
+                            { textButton ? textButton : `comment` }
                         </Button>
                     </Grid>
                 </Grid>

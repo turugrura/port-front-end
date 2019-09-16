@@ -15,15 +15,15 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const PostCreate = props => {
+const PostCreate = ({ onCreatePost, post, textButton, textLabel }) => {
     const classes = useStyles();
-    const [ content, setContent ] = useState('');
+    const [ content, setContent ] = useState( post ? post.content : '' );
 
     const onSubmitForm = e => {
         e.preventDefault();
         if (content.trim() === '') return ;
 
-        props.onCreatePost({ content });
+        onCreatePost({ content });
         setContent('');
     };
 
@@ -37,7 +37,7 @@ const PostCreate = props => {
                             margin="normal"
                             fullWidth
                             multiline
-                            label="How are you?"
+                            label={ textLabel ? textLabel : "How are you?" }
                             autoComplete="off"
                             onChange={(e) => setContent(e.target.value)}
                             value={content}
@@ -52,7 +52,7 @@ const PostCreate = props => {
                             disableFocusRipple={true}
                             className={classes.submit}
                         >
-                            Post
+                            { textButton ? textButton : `Post` }
                         </Button>
                     </Grid>
                 </Grid>

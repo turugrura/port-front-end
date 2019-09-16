@@ -2,8 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { sortByCreatedAtAsc, sortByCreatedAtDesc } from '../utils';
-import { fetchAllPosts, fetchMyPosts, createPost } from '../store/actions/postAction';
-import { createComment } from '../store/actions/commentAction';
+import { 
+    fetchAllPosts,
+    fetchMyPosts,
+    createPost,
+    updatePost,
+    deletePost 
+} from '../store/actions/postAction';
+import { 
+    createComment,
+    updateComment,
+    deleteComment
+} from '../store/actions/commentAction';
 
 import PostCreate from '../components/post/PostCreate';
 import Post from '../components/post/Post';
@@ -24,14 +34,38 @@ class PostPage extends Component {
         this.props.createPost(this.props.currentUser, newPost, this.props.history.location.pathname);
     };
 
+    onUpdatePost = (postId, newPost) => {
+        this.props.updatePost(this.props.currentUser, postId, newPost, this.props.history.location.pathname);
+    };
+
+    onDeletePost = postId => {
+        this.props.deletePost(this.props.currentUser, postId, this.props.history.location.pathname);
+    };
+
     onCreateComment = (postId, newComment) => {
         this.props.createComment(this.props.currentUser, postId, newComment, this.props.history.location.pathname);
     };
 
+    onUpdateComment = (commentId, newComment) => {
+        this.props.updateComment(this.props.currentUser, commentId, newComment, this.props.history.location.pathname);
+    };
+
+    onDeleteComment = (commentId) => {
+        this.props.deleteComment(this.props.currentUser, commentId, this.props.history.location.pathname);
+    };
+
     renderPostList = (posts = []) => {
         return posts.map( post => (
-            <Post key={post._id} post={post} currentUser={this.props.currentUser} >
-                <CommentList comments={post.comments.sort(sortByCreatedAtAsc)} />
+            <Post key={post._id} post={post} currentUser={this.props.currentUser} 
+                onUpdatePost={this.onUpdatePost}
+                onDeletePost={this.onDeletePost}
+            >
+                <CommentList 
+                    comments={post.comments.sort(sortByCreatedAtAsc)} 
+                    currentUser={this.props.currentUser}
+                    onUpdateComment={this.onUpdateComment}
+                    onDeleteComment={this.onDeleteComment}
+                />
                 <CommentCreate postId={post._id} onCreateComment={this.onCreateComment} />
             </Post>
         ));
@@ -62,7 +96,11 @@ const mapDispatchToProps = {
     fetchMyPosts,
     fetchAllPosts,
     createPost,
-    createComment
+    updatePost,
+    deletePost,
+    createComment,
+    updateComment,
+    deleteComment
 };
 
 export default connect(

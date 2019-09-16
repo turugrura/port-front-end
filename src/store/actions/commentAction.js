@@ -1,6 +1,8 @@
 import myApi from '../../api/port-back-end';
 import {
-    CREATE_COMMENT
+    CREATE_COMMENT,
+    UPDATE_COMMENT,
+    DELETE_COMMENT
 } from './actionTypes';
 
 const createComment = (currentUser, postId, newComment, fromPage = '/') => async dispatch => {
@@ -45,6 +47,92 @@ const createComment = (currentUser, postId, newComment, fromPage = '/') => async
     })
 };
 
+const updateComment = (currentUser, commentId, newComment, fromPage = '/') => async dispatch => {
+    let posts = [];
+    try {
+        await myApi.patch(`/comments/${commentId}`, newComment, {
+            headers: {
+                Authorization: `Bearer ${currentUser.token}`
+            }
+        });
+    } catch (error) {
+        console.log(error.response);
+    } finally {
+        if (fromPage === '/') {
+            const res = await myApi.get('/posts/comments');
+            if (res.status === 200) {
+                posts = res.data.data.map( post => {
+                    return {
+                        ...post,
+                        author: post.author._id,
+                        title: post.author.title
+                    };
+                });
+            };
+        } else {
+            const res = await myApi.get(`/users/${currentUser._id}/posts/comments`);
+            if (res.status === 200 && res.data.data.length > 0) {
+                const title = res.data.data[0].title;
+                posts = res.data.data[0].posts.map( post => {
+                    return {
+                        ...post,
+                        title
+                    };
+                });
+            };
+        };
+    };
+
+    dispatch({
+        type: UPDATE_COMMENT,
+        payload: posts
+    })
+};
+
+const deleteComment = (currentUser, commentId, fromPage = '/') => async dispatch => {
+    let posts = [];
+    try {
+        await myApi.delete(`/comments/${commentId}`, {
+            headers: {
+                Authorization: `Bearer ${currentUser.token}`
+            }
+        });
+    } catch (error) {
+        console.log(error.response);
+    } finally {
+        if (fromPage === '/') {
+            const res = await myApi.get('/posts/comments');
+            if (res.status === 200) {
+                posts = res.data.data.map( post => {
+                    return {
+                        ...post,
+                        author: post.author._id,
+                        title: post.author.title
+                    };
+                });
+            };
+        } else {
+            const res = await myApi.get(`/users/${currentUser._id}/posts/comments`);
+            if (res.status === 200 && res.data.data.length > 0) {
+                const title = res.data.data[0].title;
+                posts = res.data.data[0].posts.map( post => {
+                    return {
+                        ...post,
+                        title
+                    };
+                });
+            };
+        };
+    };
+
+    dispatch({
+        type: DELETE_COMMENT,
+        payload: posts
+    })
+};
+
 export {
-    createComment
+    createComment,
+    updateComment,
+    deleteComment
 }

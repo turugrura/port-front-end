@@ -2,18 +2,23 @@ import React from 'react';
 
 import Comment from './Comment';
 
-const renderCommentList = (comments = []) => {
+const renderCommentList = ({comments = [], onUpdateComment, onDeleteComment, currentUser}) => {
     return comments.map( cm => {
         return (
-            <Comment key={cm._id} comment={cm} />
+            <Comment key={cm._id}
+                comment={cm}
+                currentUser={currentUser}
+                onUpdateComment={onUpdateComment} 
+                onDeleteComment={onDeleteComment}
+            />
         )
     });
 };
 
-const CommentList = props => {
+const CommentList = ({ ...rest }) => {
     return (
         <div>
-            {renderCommentList(props.comments)}
+            {renderCommentList(rest)}
         </div>
     );
 };
