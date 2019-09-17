@@ -2,7 +2,7 @@ import React from 'react';
 
 import { makeStyles, Paper, Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core';
 
-import Todo from './Todo';
+import User from './User';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const TodoList = ({ todos = [], currentUser, onUpdateTodo, onDeleteTodo }) => {
+const UserList = ({ users = [] }) => {
     const classes = useStyles();
 
     return (
@@ -36,13 +36,10 @@ const TodoList = ({ todos = [], currentUser, onUpdateTodo, onDeleteTodo }) => {
                 </TableHead>
                 <TableBody>
                 {
-                    todos.map( todo => {
+                    users.map( user => {
                         return (
-                            <Todo key={todo._id}
-                                todo={todo}
-                                currentUser={currentUser}
-                                onUpdateTodo={onUpdateTodo}
-                                onDeleteTodo={onDeleteTodo}
+                            <User key={user._id}
+                                user={user}
                             />
                         )
                     })
@@ -53,4 +50,4 @@ const TodoList = ({ todos = [], currentUser, onUpdateTodo, onDeleteTodo }) => {
     );
 };
 
-export default TodoList;
+export default UserList;

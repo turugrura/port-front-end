@@ -29,7 +29,12 @@ const useStyles = makeStyles( theme => ({
     }
 }));
 
-const Comment = ({ comment, onUpdateComment, onDeleteComment, currentUser }) => {
+const Comment = ({ 
+    comment,
+    onUpdateComment,
+    onDeleteComment,
+    currentUser 
+}) => {
     const [isUpdate, setToggleUpdate] = useState(false);
     const [isOpenModal, setToggleModal] = useState(false);
 

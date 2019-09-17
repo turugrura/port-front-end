@@ -15,16 +15,29 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const PostCreate = ({ onCreatePost, post, textButton, textLabel }) => {
+const PostCreate = ({ 
+    onCreatePost,
+    post,
+    textButton = `Post`,
+    textLabel = "How are you?"
+}) => {
     const classes = useStyles();
-    const [ content, setContent ] = useState( post ? post.content : '' );
+    const [ newPost, setNewPost ] = useState( post ? post : { content: ''});
 
     const onSubmitForm = e => {
         e.preventDefault();
-        if (content.trim() === '') return ;
 
-        onCreatePost({ content });
-        setContent('');
+        onCreatePost(newPost);
+        setNewPost({
+            content: ''
+        });
+    };
+
+    const onChange = e => {
+        setNewPost({
+            ...newPost,
+            [e.target.name]: e.target.value
+        });
     };
 
     return (
@@ -37,10 +50,12 @@ const PostCreate = ({ onCreatePost, post, textButton, textLabel }) => {
                             margin="normal"
                             fullWidth
                             multiline
-                            label={ textLabel ? textLabel : "How are you?" }
+                            required
+                            label={ textLabel }
                             autoComplete="off"
-                            onChange={(e) => setContent(e.target.value)}
-                            value={content}
+                            name='content'
+                            onChange={onChange}
+                            value={newPost.content}
                         />
                     </Grid>
                     <Grid item xs={3} >
@@ -52,7 +67,7 @@ const PostCreate = ({ onCreatePost, post, textButton, textLabel }) => {
                             disableFocusRipple={true}
                             className={classes.submit}
                         >
-                            { textButton ? textButton : `Post` }
+                            { textButton }
                         </Button>
                     </Grid>
                 </Grid>

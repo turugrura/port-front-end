@@ -23,6 +23,13 @@ const sortByCreatedAtDesc = (x, y) => {
     return -(dateX.getTime() - dateY.getTime());
 };
 
+const sortByCustom = (field, asc = 1) => (x, y) => {
+    const val1 = x[field];
+    const val2 = y[field];
+
+    return asc*(val1 - val2);
+};
+
 const getTitleDisplay = (title = '') => {
     return title.substr(0,10);
 };
@@ -31,5 +38,6 @@ export {
     getDateTime,
     sortByCreatedAtAsc,
     sortByCreatedAtDesc,
-    getTitleDisplay
+    getTitleDisplay,
+    sortByCustom
 }

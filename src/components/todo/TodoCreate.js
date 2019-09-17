@@ -15,26 +15,32 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const TodoCreate = props => {
+const TodoCreate = ({
+    onCreateTodo,
+    todo,
+    textButton = 'create',
+    textLabelTopic = 'Topic',
+    textLabelContent = 'What you want todo?'
+}) => {
     const classes = useStyles();
-    const [ todo, setTodo ] = useState({
-        topic: '',
-        content: ''
+    const [ newTodo, setNewTodo ] = useState({
+        topic: todo ? todo.topic : '',
+        content: todo ? todo.content : ''
     });
 
     const onSubmitForm = e => {
         e.preventDefault();
 
-        props.onCreateTodo(todo);
-        setTodo({
+        onCreateTodo(newTodo);
+        setNewTodo({
             topic: '',
             content: ''
         });
     };
 
     const onChange = e => {
-        setTodo({
-            ...todo,
+        setNewTodo({
+            ...newTodo,
             [e.target.name]: e.target.value
         })
     };
@@ -48,12 +54,12 @@ const TodoCreate = props => {
                             variant="outlined"
                             margin="normal"
                             fullWidth
-                            label="Topic"
+                            label={ textLabelTopic }
                             required
                             name="topic"
                             autoComplete="off"
                             onChange={onChange}
-                            value={todo.topic}
+                            value={newTodo.topic}
                         />
                     </Grid>
                     <Grid item xs={8} >
@@ -64,10 +70,10 @@ const TodoCreate = props => {
                             multiline
                             name='content'
                             required
-                            label="What you want todo?"
+                            label={ textLabelContent }
                             autoComplete="off"
                             onChange={onChange}
-                            value={todo.content}
+                            value={newTodo.content}
                         />
                     </Grid>
                     <Grid item xs={3} >
@@ -79,7 +85,7 @@ const TodoCreate = props => {
                             disableFocusRipple={true}
                             className={classes.submit}
                         >
-                            create
+                            { textButton }
                         </Button>
                     </Grid>
                 </Grid>

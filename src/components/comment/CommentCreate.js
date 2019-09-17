@@ -15,7 +15,13 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const CommentCreate = ({ onCreateComment, postId, comment, textButton, textLabel }) => {
+const CommentCreate = ({
+    onCreateComment,
+    postId,
+    comment,
+    textButton = `comment`,
+    textLabel = "What you think about this post?"
+}) => {
     const classes = useStyles();
     const [ newComment, setNewComment ] = useState({
         content: comment ? comment.content : ''
@@ -48,7 +54,7 @@ const CommentCreate = ({ onCreateComment, postId, comment, textButton, textLabel
                             margin="normal"
                             fullWidth
                             multiline
-                            label={ textLabel ? textLabel : "What you think about this post?" }
+                            label={textLabel}
                             autoComplete="off"
                             name='content'
                             onChange={onChange}
@@ -64,7 +70,7 @@ const CommentCreate = ({ onCreateComment, postId, comment, textButton, textLabel
                             disableFocusRipple={true}
                             className={classes.submit}
                         >
-                            { textButton ? textButton : `comment` }
+                            {textButton}
                         </Button>
                     </Grid>
                 </Grid>
