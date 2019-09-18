@@ -8,15 +8,14 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
-  },
+    overflowX: 'auto',
+},
 }));
 
-
-const SettingList = props => {
-    const [selectedIndex, setSelectedIndex] = React.useState(0);
+const SettingList = ({ listSeleted = 0, onChangeListSeleted, currentUser }) => {
         
     const onClickItemList = (indexItem) => {
-        setSelectedIndex(indexItem);
+        onChangeListSeleted(indexItem);
     };
 
     const classes = useStyles();
@@ -26,7 +25,7 @@ const SettingList = props => {
             <List component="nav" aria-label="main mailbox folders">
                 <ListItem 
                     button 
-                    selected={selectedIndex === 0}
+                    selected={listSeleted === 0}
                     onClick={() => onClickItemList(0)}
                 >
                     <ListItemIcon>
@@ -34,20 +33,27 @@ const SettingList = props => {
                     </ListItemIcon>
                     <ListItemText primary="Account" />
                 </ListItem>
-                <ListItem 
-                    button 
-                    selected={selectedIndex === 1}
-                    onClick={() => onClickItemList(1)}
-                >
-                    <ListItemIcon>
-                        <PeopleIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Users" />
-                </ListItem>
+                {
+                    currentUser.role !== 'user' ? (
+                        <ListItem 
+                            button 
+                            selected={listSeleted === 1}
+                            onClick={() => onClickItemList(1)}
+                        >
+                            <ListItemIcon>
+                                <PeopleIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Users" />
+                        </ListItem>
+                    ) : null
+                }                
             </List>
             <Divider />
             <List component="nav" aria-label="secondary mailbox folders">
-                <ListItem button>
+                <ListItem
+                    button
+                    onClick={() => onClickItemList(11)}
+                >
                     <ListItemText primary="Change password" />
                 </ListItem>
             </List>

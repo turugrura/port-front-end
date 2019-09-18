@@ -3,6 +3,7 @@ import {
     SIGN_UP,
     SIGN_OUT,
     SET_CURRENT_USER,
+    UPDATE_CURRENT_USER,
     CLEAR_CURRENT_USER
 } from '../actions/actionTypes';
 
@@ -28,6 +29,7 @@ export default (state = INITIAL_STATE, action) => {
                 currentUser: action.payload
             };
         case SET_CURRENT_USER:
+        case UPDATE_CURRENT_USER:
             return {
                 ...state,
                 currentUser: action.payload

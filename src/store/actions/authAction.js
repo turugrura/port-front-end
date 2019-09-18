@@ -5,6 +5,7 @@ import {
     SIGN_UP,
     SIGN_OUT,
     SET_CURRENT_USER,
+    UPDATE_CURRENT_USER,
     CLEAR_CURRENT_USER
 } from './actionTypes';
 
@@ -20,7 +21,7 @@ const signIn = ({username, password}) => async dispatch => {
                 ...res.data.data,
                 token: res.data.token
             }
-            localStorage.setItem('jwt', user.token);
+            window.localStorage.setItem('jwt', user.token);
         };
     } catch (error) {
         console.log(error.response);
@@ -49,7 +50,7 @@ const signUp = ({username, password, title}) => async dispatch => {
                 ...res.data.data,
                 token: res.data.token
             }
-            localStorage.setItem('jwt', user.token);
+            window.localStorage.setItem('jwt', user.token);
         };
     } catch (error) {
         console.log(error.response);
@@ -74,7 +75,7 @@ const signOut = (currentUser = {}) => async dispatch => {
         });
         if (res.status === 200) {
             currentUser = {};
-            localStorage.removeItem('jwt');
+            window.localStorage.removeItem('jwt');
         };
     } catch (error) {
         console.log(error.response);        
@@ -100,7 +101,7 @@ const setCurrentUser = (token) => async dispatch => {
         };
     } catch (error) {
         console.log(error.response);
-        localStorage.removeItem('jwt');
+        window.localStorage.removeItem('jwt');
         user = {
             ...error.response.data,
             status: error.response.status
@@ -109,6 +110,34 @@ const setCurrentUser = (token) => async dispatch => {
 
     dispatch({
         type: SET_CURRENT_USER,
+        payload: user
+    });
+};
+
+const updateCurrentUser = (currentUser, userUpdated) => async dispatch => {
+    let user = {};
+    try {
+        const res = await myApi.patch('/users/me', userUpdated, {
+            headers: {
+                Authorization: `Bearer ${currentUser.token}`
+            }
+        });
+        
+        if (res.status === 200) {
+            user = res.data.data;
+            user.token = currentUser.token;
+        };
+    } catch (error) {
+        console.log(error.response);
+        window.localStorage.removeItem('jwt');
+        user = {
+            ...error.response.data,
+            status: error.response.status
+        };
+    }
+
+    dispatch({
+        type: UPDATE_CURRENT_USER,
         payload: user
     });
 };
@@ -125,5 +154,6 @@ export {
     signUp,
     signOut,
     setCurrentUser,
+    updateCurrentUser,
     clearCurrentUser
 }

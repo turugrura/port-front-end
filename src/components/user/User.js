@@ -1,69 +1,111 @@
 import React, { useState } from 'react';
 
-import { makeStyles, TableRow, TableCell, IconButton } from '@material-ui/core';
-import { Edit as EditIcon, Done as DoneIcon, DeleteForever as DeleteForeverIcon } from '@material-ui/icons';
+import { makeStyles, TableRow, TableCell, TextField, MenuItem, IconButton } from '@material-ui/core';
+import { CheckCircle as CheckCircleIcon } from '@material-ui/icons';
+import { green } from '@material-ui/core/colors';
 
 import { getDateTime } from '../../utils';
 
-const useStyles = makeStyles( theme => ({
+const useStyles = makeStyles(theme => ({
     root: {
-        flexGrow: 1
+        width: '100%',
+        // marginTop: theme.spacing(1),
+        overflowX: 'auto',        
     },
-    todoMultiline: {
-        'word-break':' break-word',
-        'white-space': 'pre-wrap'
-    }
+    me: {
+        backgroundColor: green[200]
+    },
+    nonActive: {
+        backgroundColor: green[200]
+    },
+    menu: {
+        width: 200,
+    },
+    textField: {
+        minWidth: 100
+    },
 }));
 
-const User = ({ user, currentUser }) => {
-    const { username, title, role, active, createdAt } = user;
+const User = ({ user, currentUser, onUpdateRole }) => {
+    const { username, _id, title, role, active, createdAt } = user;
+    const [ userUpdated, setUserUpdated ] = useState({
+        ...user
+    });
 
-    // const onChange = e => {
-    //     setNewTodo({
-    //         ...newTodo,
-    //         [e.target.name]: e.target.value
-    //     })
-    // };
+    const rolesPower = {
+        admin: 99,
+        head: 1,
+        user: 0
+    };
+    const roles = [
+        { value: 'admin', power: 99},
+        { value: 'head', power: 1},
+        { value: 'user', power: 0 }
+    ];
 
-    // const onClickUpdateTodo = () => {
-    //     if(newTodo.topic.trim() === '') return;
-    //     if(newTodo.content.trim()  === '') return;
+    const handleChange = name => event => {
+        setUserUpdated({
+            ...userUpdated,
+            [name]: event.target.value
+        });
+    };
 
-    //     toggleOpenUpdate(!isOpenUpdate);
+    const onClickUpdateRole = () => {
+        onUpdateRole(userUpdated);
+    };
 
-    //     onUpdateTodo(todo._id, newTodo);
-    // };
-
-    // const onClickDeleteTodo = () => {
-    //     onDeleteTodo(todo._id);
-    // };
-
-    // const onToggleOpenUpdate = () => {
-    //     toggleOpenUpdate(!isOpenUpdate)
-    //     setNewTodo({
-    //         topic,
-    //         content,
-    //         status
-    //     });
-    // };
-    
     const classes = useStyles();
 
     return (
-        <TableRow>
-            <TableCell padding='none' align='left' >{ active ? 'active' : 'not active' }</TableCell>
-            <TableCell padding='none' align='left' >{getDateTime(createdAt)}</TableCell>
-            <TableCell align='left' className={classes.todoMultiline} >
+        <TableRow className={ currentUser._id === _id ? classes.me : (active ? null : classes.nonActive) }>
+            <TableCell align='left' >{getDateTime(createdAt)}</TableCell>
+            <TableCell align="left" >
+                {
+                    rolesPower[currentUser.role] > rolesPower[role] ? (
+                        <TextField
+                            select
+                            className={classes.textField}
+                            value={userUpdated.role}
+                            onChange={handleChange('role')}
+                            SelectProps={{
+                                MenuProps: {
+                                    className: classes.menu,
+                                },
+                            }}
+                            margin="normal"
+                            variant="outlined"
+                        >
+                            {
+                                roles.filter( el => el.power < rolesPower[currentUser.role]).map(option => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.value}
+                                    </MenuItem>
+                                    )
+                                )
+                            }
+                        </TextField>
+                    ) : (
+                        userUpdated.role
+                    )
+                }                                
+            </TableCell>
+            <TableCell align='left' >
                 { username }                
             </TableCell>
-            <TableCell padding='none' align="left" className={classes.todoMultiline} >
+            <TableCell align="left" >
                 { title }
             </TableCell>
-            <TableCell align="right" >
-                { role }
-            </TableCell>
-        </TableRow>            
-    );
+            <TableCell align='center' >
+                {
+                    userUpdated.role !== role ? (
+                        <IconButton onClick={onClickUpdateRole} >
+                            <CheckCircleIcon color='primary' />
+                        </IconButton>
+                    ) : `No update.`
+                }
+            </TableCell>            
+        </TableRow>
+    )
 };
 
 export default User;

@@ -18,6 +18,8 @@ export const SIGN_IN = 'SIGN_IN';
 export const SIGN_UP = 'SIGN_UP';
 export const SIGN_OUT = 'SIGN_OUT';
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
+export const UPDATE_CURRENT_USER = 'UPDATE_CURRENT_USER';
 export const CLEAR_CURRENT_USER = 'CLEAR_CURRENT_USER';
 
 export const GET_ALL_USER = 'GET_ALL_USER';
+export const UPDATE_USER_BY_ADMIN = 'UPDATE_USER_BY_ADMIN';

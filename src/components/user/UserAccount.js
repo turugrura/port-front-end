@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1
     },
     textInput: {
-        margin: theme.spacing(3)
+        margin: theme.spacing(2)
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -17,12 +17,11 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const UserAccount = props => {
-    const { username, title, role, image, createdAt } = props.currentUser;
+const UserAccount = ({ currentUser, onUpdatedCurrentUser }) => {
+    const { username, title, role, image, createdAt, updatedAt } = currentUser;
     const [ user, setUser ] = useState({
         username,
         title,
-        role,
         image
     });
 
@@ -33,8 +32,10 @@ const UserAccount = props => {
         });
     };
 
-    const onClickSave = () => {
-        console.log(user)
+    const onClickSubmitForm = e => {
+        e.preventDefault();
+
+        onUpdatedCurrentUser(user);
     };
     
     const classes = useStyles();
@@ -47,12 +48,13 @@ const UserAccount = props => {
             >
                 <CardHeader
                     title={title}
-                    subheader={`Sign Up : ` + getDateTime(createdAt)}
-                />
+                    subheader={`Sign Up : ` + getDateTime(createdAt) + ` / Lasted Update : ` + getDateTime(updatedAt)}
+                    
+                >M</CardHeader>
                 <CardContent
 
                 >
-                    <form className={classes.form} onSubmit={onClickSave} >                    
+                    <form className={classes.form} >                    
                         <Container  component="main" maxWidth="md">
                             <Grid container spacing={3} >
                                 <Typography variant='h4'>
@@ -89,7 +91,6 @@ const UserAccount = props => {
                                         name='image'
                                         value={user.image}
                                         fullWidth
-                                        required
                                         variant='outlined'
                                         autoComplete='off'
                                         label='Image'
@@ -103,6 +104,7 @@ const UserAccount = props => {
                                         color='primary'
                                         fullWidth
                                         variant='contained'
+                                        onClick={onClickSubmitForm}
                                     >
                                         save
                                     </Button>
