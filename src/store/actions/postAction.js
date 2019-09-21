@@ -4,27 +4,48 @@ import {
     FETCH_ALL_POSTS,
     CREATE_POST,
     UPDATE_POST,
+    UPDATE_POST_LIKE,
     DELETE_POST
 } from './actionTypes';
+
+const getMyPosts = data => {
+    const title = data.data[0].title;
+    const authorImage = data.data[0].image;
+    return data.data[0].posts.map( post => {
+        return {
+            ...post,
+            authorImage,
+            title
+        };
+    });
+};
+
+const getAllPosts = data => {
+    return data.data.map( post => {
+        return {
+            ...post,
+            author: post.author._id,
+            authorImage: post.author.image,
+            title: post.author.title
+        };
+    });
+};
 
 const fetchMyPosts = (userId) => async dispatch => {
     let posts = [];
     try {
         const res = await myApi.get(`users/${userId}/posts/comments`);
         if (res.status === 200 && res.data.data.length > 0) {
-            const title = res.data.data[0].title;
-            posts = res.data.data[0].posts.map( post => {
-                // const comments = post.comments.map( cm => {
-                //     return {
-                //         ...cm
-                //     };
-                // });
-
-                return {
-                    ...post,
-                    title
-                };
-            });
+            // const title = res.data.data[0].title;
+            // const authorImage = res.data.data[0].image;
+            // posts = res.data.data[0].posts.map( post => {
+            //     return {
+            //         ...post,
+            //         authorImage,
+            //         title
+            //     };
+            // });
+            posts = getMyPosts(res.data);
         };
     } catch (error) {
         console.log(error.response);
@@ -42,13 +63,15 @@ const fetchAllPosts = () => async dispatch => {
     try {
         const res = await myApi.get('/posts/comments');
         if (res.status === 200) {
-            posts = res.data.data.map( post => {
-                return {
-                    ...post,
-                    author: post.author._id,
-                    title: post.author.title
-                };
-            });
+            // posts = res.data.data.map( post => {
+            //     return {
+            //         ...post,
+            //         author: post.author._id,
+            //         authorImage: post.author.image,
+            //         title: post.author.title
+            //     };
+            // });
+            posts = getAllPosts(res.data);
         };
     } catch (error) {
         console.log(error.response);
@@ -75,24 +98,26 @@ const createPost = (currentUser, post, fromPage = '/') => async dispatch => {
         if (fromPage === '/') {
             const res = await myApi.get('/posts/comments');
             if (res.status === 200) {
-                posts = res.data.data.map( post => {
-                    return {
-                        ...post,
-                        author: post.author._id,
-                        title: post.author.title
-                    };
-                });
+                // posts = res.data.data.map( post => {
+                //     return {
+                //         ...post,
+                //         author: post.author._id,
+                //         title: post.author.title
+                //     };
+                // });
+                posts = getAllPosts(res.data);
             };
         } else {
             const res = await myApi.get(`/users/${currentUser._id}/posts/comments`);
             if (res.status === 200 && res.data.data.length > 0) {
-                const title = res.data.data[0].title;
-                posts = res.data.data[0].posts.map( post => {
-                    return {
-                        ...post,
-                        title
-                    };
-                });
+                // const title = res.data.data[0].title;
+                // posts = res.data.data[0].posts.map( post => {
+                //     return {
+                //         ...post,
+                //         title
+                //     };
+                // });
+                posts = getMyPosts(res.data);
             };
         };
         
@@ -118,24 +143,26 @@ const updatePost = (currentUser, postId, post, fromPage = '/') => async dispatch
         if (fromPage === '/') {
             const res = await myApi.get('/posts/comments');
             if (res.status === 200) {
-                posts = res.data.data.map( post => {
-                    return {
-                        ...post,
-                        author: post.author._id,
-                        title: post.author.title
-                    };
-                });
+                // posts = res.data.data.map( post => {
+                //     return {
+                //         ...post,
+                //         author: post.author._id,
+                //         title: post.author.title
+                //     };
+                // });
+                posts = getAllPosts(res.data);
             };
         } else {
             const res = await myApi.get(`/users/${currentUser._id}/posts/comments`);
             if (res.status === 200 && res.data.data.length > 0) {
-                const title = res.data.data[0].title;
-                posts = res.data.data[0].posts.map( post => {
-                    return {
-                        ...post,
-                        title
-                    };
-                });
+                // const title = res.data.data[0].title;
+                // posts = res.data.data[0].posts.map( post => {
+                //     return {
+                //         ...post,
+                //         title
+                //     };
+                // });
+                posts = getMyPosts(res.data);
             };
         };        
     };
@@ -143,7 +170,51 @@ const updatePost = (currentUser, postId, post, fromPage = '/') => async dispatch
     dispatch({
         type: UPDATE_POST,
         payload: posts
-    })
+    });
+};
+
+const updatePostLike = (currentUser, postId, fromPage = '/') => async dispatch => {
+    let posts = [];
+    try {
+        await myApi.patch(`/posts/${postId}/like`, {}, {
+            headers: {
+                Authorization: `Bearer ${currentUser.token}`
+            }
+        });
+    } catch (error) {
+        console.log(error.response)
+    } finally {
+        if (fromPage === '/') {
+            const res = await myApi.get('/posts/comments');
+            if (res.status === 200) {
+                // posts = res.data.data.map( post => {
+                //     return {
+                //         ...post,
+                //         author: post.author._id,
+                //         title: post.author.title
+                //     };
+                // });
+                posts = getAllPosts(res.data);
+            };
+        } else {
+            const res = await myApi.get(`/users/${currentUser._id}/posts/comments`);
+            if (res.status === 200 && res.data.data.length > 0) {
+                // const title = res.data.data[0].title;
+                // posts = res.data.data[0].posts.map( post => {
+                //     return {
+                //         ...post,
+                //         title
+                //     };
+                // });
+                posts = getMyPosts(res.data);
+            };
+        };
+    };
+
+    dispatch({
+        type: UPDATE_POST_LIKE,
+        payload: posts
+    });
 };
 
 const deletePost = (currentUser, postId, fromPage = '/') => async dispatch => {
@@ -160,24 +231,26 @@ const deletePost = (currentUser, postId, fromPage = '/') => async dispatch => {
         if (fromPage === '/') {
             const res = await myApi.get('/posts/comments');
             if (res.status === 200) {
-                posts = res.data.data.map( post => {
-                    return {
-                        ...post,
-                        author: post.author._id,
-                        title: post.author.title
-                    };
-                });
+                // posts = res.data.data.map( post => {
+                //     return {
+                //         ...post,
+                //         author: post.author._id,
+                //         title: post.author.title
+                //     };
+                // });
+                posts = getAllPosts(res.data);
             };
         } else {
             const res = await myApi.get(`/users/${currentUser._id}/posts/comments`);
             if (res.status === 200 && res.data.data.length > 0) {
-                const title = res.data.data[0].title;
-                posts = res.data.data[0].posts.map( post => {
-                    return {
-                        ...post,
-                        title
-                    };
-                });
+                // const title = res.data.data[0].title;
+                // posts = res.data.data[0].posts.map( post => {
+                //     return {
+                //         ...post,
+                //         title
+                //     };
+                // });
+                posts = getMyPosts(res.data);
             };
         };        
     };
@@ -189,9 +262,12 @@ const deletePost = (currentUser, postId, fromPage = '/') => async dispatch => {
 };
 
 export {
+    getMyPosts,
+    getAllPosts,
     fetchAllPosts,
     fetchMyPosts,
     createPost,
     updatePost,
+    updatePostLike,
     deletePost
 }

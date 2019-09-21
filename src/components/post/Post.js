@@ -1,4 +1,6 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
+
+import { urlUsersImage } from '../../api/port-back-end';
 
 import { makeStyles, Typography, Card, CardContent, CardHeader, CardActions, Avatar, IconButton, Button } from '@material-ui/core';
 import { Favorite as FavoriteIcon, Comment as CommentIcon, Edit as EditIcon, Clear as ClearIcon } from '@material-ui/icons';
@@ -36,13 +38,17 @@ const useStyles = makeStyles( theme => ({
     }
 }));
 
-const Post = ({ post, currentUser, children, onUpdatePost, onDeletePost }) => {
+const Post = ({ post, currentUser, children, onUpdatePost, onUpdatePostLike, onDeletePost }) => {
     const classes = useStyles();
-    const { author, title, content, like, comments, createdAt } = post;
+    const { author, authorImage, title, content, like, comments, createdAt } = post;
     const [isOpenComment, setToggleOpenComment] = useState(false);
     const [isLike, setToggleLike] = useState(false);
     const [isUpdate, setToggleUpdate] = useState(false);
     const [isOpenModal, setToggleModal] = useState(false);
+
+    useEffect(() => {
+        setToggleLike(post.like.includes(currentUser._id))
+    }, [currentUser, post, isLike])
 
     const onClickCommentIcon = () => {
         if (!currentUser.token) return;        
@@ -51,7 +57,7 @@ const Post = ({ post, currentUser, children, onUpdatePost, onDeletePost }) => {
 
     const onClickFavoriteIcon = () => {
         if (!currentUser.token) return;
-        setToggleLike(!isLike);
+        onUpdatePostLike(post._id);
     };
 
     const onClickToggleModal = () => {
@@ -95,9 +101,14 @@ const Post = ({ post, currentUser, children, onUpdatePost, onDeletePost }) => {
             <CardHeader
                 className={classes.cardHeader}
                 avatar={
-                    <Avatar >
-                        {`${title}`.substr(0,1).toUpperCase()}
-                    </Avatar>
+                    authorImage !== '' ? (
+                        <Avatar src={urlUsersImage + '/' + authorImage} >
+                        </Avatar>
+                    ) : (
+                        <Avatar >
+                            {`${title}`.substr(0,1).toUpperCase()}
+                        </Avatar>
+                    )                    
                 }
                 action={
                     currentUser._id === author ? (

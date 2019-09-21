@@ -5,6 +5,11 @@ import {
     DELETE_COMMENT
 } from './actionTypes';
 
+import {
+    getMyPosts,
+    getAllPosts
+} from './postAction';
+
 const createComment = (currentUser, postId, newComment, fromPage = '/') => async dispatch => {
     let posts = [];
     try {
@@ -19,24 +24,26 @@ const createComment = (currentUser, postId, newComment, fromPage = '/') => async
         if (fromPage === '/') {
             const res = await myApi.get('/posts/comments');
             if (res.status === 200) {
-                posts = res.data.data.map( post => {
-                    return {
-                        ...post,
-                        author: post.author._id,
-                        title: post.author.title
-                    };
-                });
+                // posts = res.data.data.map( post => {
+                //     return {
+                //         ...post,
+                //         author: post.author._id,
+                //         title: post.author.title
+                //     };
+                // });
+                posts = getAllPosts(res.data);
             };
         } else {
             const res = await myApi.get(`/users/${currentUser._id}/posts/comments`);
             if (res.status === 200 && res.data.data.length > 0) {
-                const title = res.data.data[0].title;
-                posts = res.data.data[0].posts.map( post => {
-                    return {
-                        ...post,
-                        title
-                    };
-                });
+                // const title = res.data.data[0].title;
+                // posts = res.data.data[0].posts.map( post => {
+                //     return {
+                //         ...post,
+                //         title
+                //     };
+                // });
+                posts = getMyPosts(res.data);
             };
         };
     };
@@ -61,24 +68,26 @@ const updateComment = (currentUser, commentId, newComment, fromPage = '/') => as
         if (fromPage === '/') {
             const res = await myApi.get('/posts/comments');
             if (res.status === 200) {
-                posts = res.data.data.map( post => {
-                    return {
-                        ...post,
-                        author: post.author._id,
-                        title: post.author.title
-                    };
-                });
+                // posts = res.data.data.map( post => {
+                //     return {
+                //         ...post,
+                //         author: post.author._id,
+                //         title: post.author.title
+                //     };
+                // });
+                posts = getAllPosts(res.data);
             };
         } else {
             const res = await myApi.get(`/users/${currentUser._id}/posts/comments`);
             if (res.status === 200 && res.data.data.length > 0) {
-                const title = res.data.data[0].title;
-                posts = res.data.data[0].posts.map( post => {
-                    return {
-                        ...post,
-                        title
-                    };
-                });
+                // const title = res.data.data[0].title;
+                // posts = res.data.data[0].posts.map( post => {
+                //     return {
+                //         ...post,
+                //         title
+                //     };
+                // });
+                posts = getMyPosts(res.data);
             };
         };
     };
@@ -103,24 +112,26 @@ const deleteComment = (currentUser, commentId, fromPage = '/') => async dispatch
         if (fromPage === '/') {
             const res = await myApi.get('/posts/comments');
             if (res.status === 200) {
-                posts = res.data.data.map( post => {
-                    return {
-                        ...post,
-                        author: post.author._id,
-                        title: post.author.title
-                    };
-                });
+                // posts = res.data.data.map( post => {
+                //     return {
+                //         ...post,
+                //         author: post.author._id,
+                //         title: post.author.title
+                //     };
+                // });
+                posts = getAllPosts(res.data);
             };
         } else {
             const res = await myApi.get(`/users/${currentUser._id}/posts/comments`);
             if (res.status === 200 && res.data.data.length > 0) {
-                const title = res.data.data[0].title;
-                posts = res.data.data[0].posts.map( post => {
-                    return {
-                        ...post,
-                        title
-                    };
-                });
+                // const title = res.data.data[0].title;
+                // posts = res.data.data[0].posts.map( post => {
+                //     return {
+                //         ...post,
+                //         title
+                //     };
+                // });
+                posts = getMyPosts(res.data);
             };
         };
     };

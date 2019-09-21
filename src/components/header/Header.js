@@ -95,6 +95,7 @@ const renderButtonWithAuth = (classes, currentUser) => {
 const Header = (props) => {
     const classes = useStyles();
     console.log(props.currentUser)
+    if (props.currentUser.error) alert(props.currentUser.error);
 
     return (
         <div className={classes.flexGrow}>

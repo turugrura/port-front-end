@@ -21,7 +21,7 @@ const UserChangePassword = ({ currentUser, onChangePassword }) => {
     const [ password, setPassword ] = useState({
         oldPassword: '',
         newPassword: '',
-        confirmNewPassword: ''
+        confirmPassword: ''
     });
 
     const onChange = e => {
@@ -33,7 +33,12 @@ const UserChangePassword = ({ currentUser, onChangePassword }) => {
     
     const onClickSubmit = e => {
         e.preventDefault();
-        if (password.newPassword !== password.confirmNewPassword) return ;
+        if (password.newPassword !== password.confirmPassword) return ;
+        setPassword({
+            oldPassword: '',
+            newPassword: '',
+            confirmPassword: ''
+        });
 
         onChangePassword(password);
     };
@@ -49,12 +54,12 @@ const UserChangePassword = ({ currentUser, onChangePassword }) => {
                             <TextField
                                 variant="outlined"
                                 required
-                                minLength={8}
                                 fullWidth
                                 name="oldPassword"
                                 label="Old Password"
                                 type="password"
                                 autoComplete="off"
+                                value={password.oldPassword}
                                 onChange={onChange}
                             />
                         </Grid>
@@ -62,31 +67,31 @@ const UserChangePassword = ({ currentUser, onChangePassword }) => {
                             <TextField
                                 variant="outlined"
                                 required
-                                minLength={8}
                                 fullWidth
                                 name="newPassword"
                                 label="New Password"
                                 type="password"
                                 autoComplete="off"
+                                value={password.newPassword}
                                 onChange={onChange}
-                                error={ !(password.newPassword === password.confirmNewPassword) }
+                                error={ !(password.newPassword === password.confirmPassword) }
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 variant="outlined"
                                 required
-                                minLength={8}
                                 fullWidth
-                                name="confirmNewPassword"
+                                name="confirmPassword"
                                 label="Confirm New Password"
                                 type="password"
                                 autoComplete="off"
+                                value={password.confirmPassword}
                                 onChange={onChange}
-                                error={ !(password.newPassword === password.confirmNewPassword) }
+                                error={ !(password.newPassword === password.confirmPassword) }
                             />
                             {
-                                password.newPassword !== password.confirmNewPassword ? (
+                                password.newPassword !== password.confirmPassword ? (
                                     <Typography contextMenu='dd'>Password not the same to Confirm password.</Typography>                            
                                 ) : null
                             }
@@ -98,7 +103,11 @@ const UserChangePassword = ({ currentUser, onChangePassword }) => {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        disabled={ !(password.newPassword === password.confirmNewPassword) }
+                        disabled={(
+                                    !(password.newPassword === password.confirmPassword)
+                                    || (!password.oldPassword || password.oldPassword.length < 8)
+                                    || (!password.newPassword || password.newPassword.length < 8)
+                                )}
                     >
                         Change Password
                     </Button>

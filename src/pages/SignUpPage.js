@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 
-import { signUp, clearCurrentUser } from '../store/actions/authAction';
+import { signUp } from '../store/actions/authAction';
 
 import SignUpComponent from '../components/auth/SignUp';
 
@@ -17,10 +17,10 @@ class SignUp extends Component {
             this.props.history.push('/');
         };
 
-        if (this.props.currentUser.message) {
-            alert(this.props.currentUser.message);
-            this.props.clearCurrentUser();
-        };
+        // if (this.props.currentUser.message) {
+        //     alert(this.props.currentUser.message);
+        //     this.props.clearCurrentUser();
+        // };
     };
 
     onClickSubmit = (val) => {
@@ -42,7 +42,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     signUp,
-    clearCurrentUser
+    // clearCurrentUser
 };
 
 export default connect(

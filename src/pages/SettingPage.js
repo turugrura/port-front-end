@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getAllUser, updateUserByAdmin } from '../store/actions/userAction';
-import { updateCurrentUser } from '../store/actions/authAction';
+import { updateCurrentUser, changePasswordCurrentUser } from '../store/actions/authAction';
 
 import { Grid } from '@material-ui/core';
 
@@ -38,7 +38,7 @@ class SettingPage extends Component {
     };
 
     onChangePassword = password => {
-        console.log(password)
+        this.props.changePasswordCurrentUser(this.props.currentUser, password);
     };
 
     renderDetail = () => {
@@ -108,7 +108,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
     getAllUser,
     updateUserByAdmin,
-    updateCurrentUser
+    updateCurrentUser,
+    changePasswordCurrentUser
 };
 
 export default connect(

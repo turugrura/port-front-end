@@ -7,6 +7,7 @@ import {
     fetchMyPosts,
     createPost,
     updatePost,
+    updatePostLike,
     deletePost 
 } from '../store/actions/postAction';
 import { 
@@ -42,6 +43,10 @@ class PostPage extends Component {
         this.props.deletePost(this.props.currentUser, postId, this.props.history.location.pathname);
     };
 
+    onUpdatePostLike = postId => {
+        this.props.updatePostLike(this.props.currentUser, postId, this.props.history.location.pathname);
+    };
+
     onCreateComment = (postId, newComment) => {
         this.props.createComment(this.props.currentUser, postId, newComment, this.props.history.location.pathname);
     };
@@ -58,6 +63,7 @@ class PostPage extends Component {
         return posts.map( post => (
             <Post key={post._id} post={post} currentUser={this.props.currentUser} 
                 onUpdatePost={this.onUpdatePost}
+                onUpdatePostLike={this.onUpdatePostLike}
                 onDeletePost={this.onDeletePost}
             >
                 <CommentList 
@@ -97,6 +103,7 @@ const mapDispatchToProps = {
     fetchAllPosts,
     createPost,
     updatePost,
+    updatePostLike,
     deletePost,
     createComment,
     updateComment,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { makeStyles, TableRow, TableCell, IconButton, TextField } from '@material-ui/core';
+import { makeStyles, TableRow, TableCell, IconButton, TextField, MenuItem } from '@material-ui/core';
 import { Edit as EditIcon, Done as DoneIcon, DeleteForever as DeleteForeverIcon } from '@material-ui/icons';
 
 import { getDateTime } from '../../utils';
@@ -12,6 +12,9 @@ const useStyles = makeStyles( theme => ({
     todoMultiline: {
         'word-break':' break-word',
         'white-space': 'pre-wrap'
+    },
+    menu: {
+        width: 200,
     }
 }));
 
@@ -24,10 +27,10 @@ const Todo = ({ todo, currentUser, onUpdateTodo, onDeleteTodo }) => {
         status
     });
 
-    const onChange = e => {
+    const onChange = field => e => {
         setNewTodo({
             ...newTodo,
-            [e.target.name]: e.target.value
+            [field]: e.target.value
         })
     };
 
@@ -53,6 +56,13 @@ const Todo = ({ todo, currentUser, onUpdateTodo, onDeleteTodo }) => {
             status
         });
     };
+
+    const statusTodo = [
+        { value: 'none'},
+        { value: 'undo'},
+        { value: 'doing'},
+        { value: 'done'},
+    ];
     
     const classes = useStyles();
 
@@ -81,15 +91,16 @@ const Todo = ({ todo, currentUser, onUpdateTodo, onDeleteTodo }) => {
                     null
                 )
             }            
-            <TableCell padding='none' align='left' >{getDateTime(createdAt)}</TableCell>
+            <TableCell padding='none' align='left' >
+                {getDateTime(createdAt)}
+            </TableCell>
             <TableCell align='left' className={classes.todoMultiline} >
                 {
                     isOpenUpdate ? (
                         <TextField
                             required
-                            name='topic'
                             value={newTodo.topic}
-                            onChange={onChange}
+                            onChange={onChange('topic')}
                             multiline
                         >
                             { topic }
@@ -104,9 +115,8 @@ const Todo = ({ todo, currentUser, onUpdateTodo, onDeleteTodo }) => {
                         isOpenUpdate ? (
                             <TextField
                                 required
-                                name='content'
                                 value={newTodo.content}
-                                onChange={onChange}
+                                onChange={onChange('content')}
                                 multiline
                             >
                                 { content }
@@ -117,7 +127,34 @@ const Todo = ({ todo, currentUser, onUpdateTodo, onDeleteTodo }) => {
                     }
             </TableCell>
             <TableCell align="right" >
-                { status }
+                {
+                    isOpenUpdate ? (
+                        <TextField
+                            select
+                            className={classes.textField}
+                            value={newTodo.status}
+                            onChange={onChange('status')}
+                            SelectProps={{
+                                MenuProps: {
+                                    className: classes.menu,
+                                },
+                            }}
+                            margin="normal"
+                            variant="outlined"
+                        >
+                            {
+                                statusTodo.map(option => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.value}
+                                    </MenuItem>
+                                    )
+                                )
+                            }
+                        </TextField>
+                    ) : (
+                        status
+                    )
+                }
             </TableCell>
         </TableRow>            
     );

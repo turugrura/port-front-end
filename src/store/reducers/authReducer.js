@@ -4,7 +4,8 @@ import {
     SIGN_OUT,
     SET_CURRENT_USER,
     UPDATE_CURRENT_USER,
-    CLEAR_CURRENT_USER
+    CHANGE_PASSWORD_CURRENT_USER,
+    CLEAR_ERROR_CURRENT_USER
 } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
@@ -30,11 +31,8 @@ export default (state = INITIAL_STATE, action) => {
             };
         case SET_CURRENT_USER:
         case UPDATE_CURRENT_USER:
-            return {
-                ...state,
-                currentUser: action.payload
-            }
-        case CLEAR_CURRENT_USER:
+        case CHANGE_PASSWORD_CURRENT_USER:
+        case CLEAR_ERROR_CURRENT_USER:
             return {
                 ...state,
                 currentUser: action.payload

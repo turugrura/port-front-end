@@ -6,7 +6,8 @@ import {
     SIGN_OUT,
     SET_CURRENT_USER,
     UPDATE_CURRENT_USER,
-    CLEAR_CURRENT_USER
+    CHANGE_PASSWORD_CURRENT_USER,
+    CLEAR_ERROR_CURRENT_USER
 } from './actionTypes';
 
 const signIn = ({username, password}) => async dispatch => {
@@ -25,10 +26,7 @@ const signIn = ({username, password}) => async dispatch => {
         };
     } catch (error) {
         console.log(error.response);
-        user = {
-            ...error.response.data,
-            status: error.response.status
-        };
+        user.error = error.response.data.message;
     };
 
     dispatch({
@@ -54,10 +52,7 @@ const signUp = ({username, password, title}) => async dispatch => {
         };
     } catch (error) {
         console.log(error.response);
-        user = {
-            ...error.response.data,
-            status: error.response.status
-        };
+        user.error = error.response.data.message;
     };
 
     dispatch({
@@ -78,7 +73,8 @@ const signOut = (currentUser = {}) => async dispatch => {
             window.localStorage.removeItem('jwt');
         };
     } catch (error) {
-        console.log(error.response);        
+        console.log(error.response);
+        currentUser.error = error.response.data.message;
     };
 
     dispatch({
@@ -102,10 +98,7 @@ const setCurrentUser = (token) => async dispatch => {
     } catch (error) {
         console.log(error.response);
         window.localStorage.removeItem('jwt');
-        user = {
-            ...error.response.data,
-            status: error.response.status
-        };
+        user.error = error.response.data.message;
     }
 
     dispatch({
@@ -117,6 +110,21 @@ const setCurrentUser = (token) => async dispatch => {
 const updateCurrentUser = (currentUser, userUpdated) => async dispatch => {
     let user = {};
     try {
+        if (userUpdated.image !== '') {
+            const fd = new FormData();
+            fd.append('image', userUpdated.image);
+
+            const res = await myApi.patch('/users/me', fd, {
+                headers: {
+                    Authorization: `Bearer ${currentUser.token}`
+                }
+            });
+            if (res.status !== 200) {
+                throw new Error('Error occur when uploading image.');
+            }
+        };        
+
+        delete userUpdated.image;
         const res = await myApi.patch('/users/me', userUpdated, {
             headers: {
                 Authorization: `Bearer ${currentUser.token}`
@@ -129,12 +137,9 @@ const updateCurrentUser = (currentUser, userUpdated) => async dispatch => {
         };
     } catch (error) {
         console.log(error.response);
-        window.localStorage.removeItem('jwt');
-        user = {
-            ...error.response.data,
-            status: error.response.status
-        };
-    }
+        user = currentUser;
+        user.error = error.response.data.message;
+    };
 
     dispatch({
         type: UPDATE_CURRENT_USER,
@@ -142,10 +147,39 @@ const updateCurrentUser = (currentUser, userUpdated) => async dispatch => {
     });
 };
 
-const clearCurrentUser = () => {
+const changePasswordCurrentUser = (currentUser, password) => async dispatch => {
+    let user = {
+        ...currentUser
+    };
+    try {
+        const res = await myApi.patch('/users/me/changepassword', password, {
+            headers: {
+                Authorization: `Bearer ${currentUser.token}`
+            }
+        });
+        
+        if (res.status === 200) {
+            user = res.data.data;
+            user.token = res.data.token;
+            window.localStorage.setItem('jwt', user.token);
+        };
+    } catch (error) {
+        console.log(error.response);
+        user.error = error.response.data.message;
+    };
+
+    dispatch({
+        type: CHANGE_PASSWORD_CURRENT_USER,
+        payload: user
+    });
+};
+
+const clearErrorCurrentUser = (currentUser) => {
+    delete currentUser.error;
+
     return ({
-        type: CLEAR_CURRENT_USER,
-        payload: {}
+        type: CLEAR_ERROR_CURRENT_USER,
+        payload: currentUser
     });
 };
 
@@ -155,5 +189,6 @@ export {
     signOut,
     setCurrentUser,
     updateCurrentUser,
-    clearCurrentUser
+    changePasswordCurrentUser,
+    clearErrorCurrentUser
 }

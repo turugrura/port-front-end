@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { urlUsersImage } from '../../api/port-back-end';
+
 import { makeStyles, Typography, Card, CardContent, CardHeader, Avatar, IconButton, Button } from '@material-ui/core';
 import { Edit as EditIcon, Clear as ClearIcon } from '@material-ui/icons';
 
@@ -82,9 +84,14 @@ const Comment = ({
             <CardHeader
                 className={classes.cardHeader}
                 avatar={
-                    <Avatar >
-                        {`${author.title}`.substr(0,1).toUpperCase()}
-                    </Avatar>
+                    author.image !== '' ? (
+                        <Avatar src={urlUsersImage + '/' + author.image} >
+                        </Avatar>
+                    ) : (
+                        <Avatar >
+                            {`${author.title}`.substr(0,1).toUpperCase()}
+                        </Avatar>
+                    )
                 }
                 action={
                     currentUser._id === author._id ? (

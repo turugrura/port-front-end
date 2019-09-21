@@ -1,12 +1,14 @@
 const getDateTime = (datetime = '') => {
     const dt = new Date(datetime);
 
-    // example: 2019/09/01 09:03
-    return dt.getFullYear() + '/' 
-            + dt.getMonth().toString().padStart(2,'0') + '/' 
-            + dt.getDate().toString().padStart(2,'0') + ' ' 
-            + dt.getHours().toString().padStart(2,'0') + ':' 
-            + dt.getMinutes().toString().padStart(2,'0');
+    // example: 09:03 2019/09/01
+    return (
+              dt.getHours().toString().padStart(2,'0') + ':' 
+            + dt.getMinutes().toString().padStart(2,'0') + ' '
+            + dt.getFullYear() + '/'
+            + dt.getMonth().toString().padStart(2,'0') + '/'
+            + dt.getDate().toString().padStart(2,'0')
+    );
 };
 
 const sortByCreatedAtAsc = (x, y) => {

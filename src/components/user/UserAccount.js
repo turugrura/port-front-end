@@ -1,6 +1,20 @@
 import React, { useState } from 'react';
 
-import { makeStyles, Grid, Card, CardContent, CardHeader, TextField, Button, Container, Typography } from '@material-ui/core';
+import { urlUsersImage } from '../../api/port-back-end';
+
+import { 
+    makeStyles,
+    Grid,
+    Card,
+    CardContent,
+    CardHeader,
+    CardMedia,
+    TextField,
+    Button,
+    Container,
+    Typography,
+    // IconButton
+} from '@material-ui/core';
 
 import { getDateTime } from '../../utils';
 
@@ -14,11 +28,27 @@ const useStyles = makeStyles(theme => ({
     form: {
         width: '100%', // Fix IE 11 issue.
         marginTop: theme.spacing(3),
+    },
+    button: {
+        margin: theme.spacing(2)
+    },
+    card : {
+        margin: theme.spacing(2)
+    },
+    media: {
+        height: 200,
+        width: 200,
+        // paddingTop: '100%', // 16:9
+        margin: theme.spacing(2),
+    },
+    center: {
+        display: 'flex',
+        justifyContent: 'center'
     }
 }));
 
 const UserAccount = ({ currentUser, onUpdatedCurrentUser }) => {
-    const { username, title, role, image, createdAt, updatedAt } = currentUser;
+    const { username, title, role, image, image: imagePath, createdAt, updatedAt } = currentUser;
     const [ user, setUser ] = useState({
         username,
         title,
@@ -35,31 +65,59 @@ const UserAccount = ({ currentUser, onUpdatedCurrentUser }) => {
     const onClickSubmitForm = e => {
         e.preventDefault();
 
+        console.log(user)
         onUpdatedCurrentUser(user);
+    };
+
+    const onSelectFile = async e => {        
+        setUser({
+            ...user,
+            image: e.target.files[0] || ''
+        });        
     };
     
     const classes = useStyles();
 
     return (
         <div className={classes.root}>
-            
             <Card
 
             >
-                <CardHeader
+                <CardHeader                    
                     title={title}
-                    subheader={`Sign Up : ` + getDateTime(createdAt) + ` / Lasted Update : ` + getDateTime(updatedAt)}
-                    
-                >M</CardHeader>
+                    subheader={role}
+                />                
                 <CardContent
 
                 >
-                    <form className={classes.form} >                    
+                    <form className={classes.form} >                        
                         <Container  component="main" maxWidth="md">
                             <Grid container spacing={3} >
-                                <Typography variant='h4'>
-                                    {role}
-                                </Typography>
+                                <Grid item xs={12}>
+                                    <Typography variant='body2'>
+                                        {`Signed Up : ` + getDateTime(createdAt)}
+                                    </Typography>
+                                    <Typography variant='body2'>
+                                        {`Lasted Update : ` + getDateTime(updatedAt)}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} className={classes.center}>
+                                    <CardMedia className={classes.media}
+                                        component='img'
+                                        alt='my profile'
+                                        image={urlUsersImage + '/' + imagePath}
+                                        title='user image'
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        type='file'
+                                        name='filePath'
+                                        fullWidth
+                                        onChange={onSelectFile}
+                                        className={classes.textInput}
+                                    />
+                                </Grid>
                                 <Grid item xs={12}>
                                     <TextField
                                         name='title'
@@ -85,19 +143,7 @@ const UserAccount = ({ currentUser, onUpdatedCurrentUser }) => {
                                         onChange={onChange}
                                         className={classes.textInput}
                                     />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        name='image'
-                                        value={user.image}
-                                        fullWidth
-                                        variant='outlined'
-                                        autoComplete='off'
-                                        label='Image'
-                                        onChange={onChange}
-                                        className={classes.textInput}
-                                    />
-                                </Grid>
+                                </Grid>                            
                                 <Grid item xs={12}>
                                     <Button
                                         type='submit'
@@ -105,6 +151,7 @@ const UserAccount = ({ currentUser, onUpdatedCurrentUser }) => {
                                         fullWidth
                                         variant='contained'
                                         onClick={onClickSubmitForm}
+                                        className={classes.button}
                                     >
                                         save
                                     </Button>

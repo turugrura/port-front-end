@@ -106,7 +106,7 @@ export default function SignIn(props) {
             name="username"
             autoComplete="username"
             autoFocus
-            defaultValue={user.username}
+            value={user.username}
             onChange={onChange}
           />
           <TextField
@@ -118,6 +118,7 @@ export default function SignIn(props) {
             label="Password"
             type="password"
             autoComplete="current-password"
+            value={user.password}
             onChange={onChange}
           />
           <FormControlLabel

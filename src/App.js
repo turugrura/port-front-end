@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route, withRouter, Redirect } from 'react-router-dom';
 
-import { setCurrentUser, signOut } from './store/actions/authAction';
+import { setCurrentUser, signOut, clearErrorCurrentUser } from './store/actions/authAction';
 
 // import HomePage from './pages/HomePage';
 import PostPage from './pages/PostPage';
@@ -19,6 +19,14 @@ class App extends Component {
       this.props.setCurrentUser(localStorage.getItem('jwt'));
     };
   };
+
+  componentDidUpdate() {
+    if (this.props.currentUser) {
+      if (this.props.currentUser.error) {
+        this.props.clearErrorCurrentUser(this.props.currentUser);
+      }
+    }
+  }
 
   PrivateRoute = ({ component: Component, ...rest }) => {
     return (
@@ -66,7 +74,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   setCurrentUser,
-  signOut
+  signOut,
+  clearErrorCurrentUser
 };
 
 export default withRouter(connect(

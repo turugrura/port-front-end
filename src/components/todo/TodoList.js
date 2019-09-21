@@ -9,13 +9,9 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
         marginTop: theme.spacing(1),
         overflowX: 'auto',
-        
     },
     table: {
         minWidth: 650,
-    },
-    cell: {
-        padding: (10, 5, 10)
     }
 }));
 

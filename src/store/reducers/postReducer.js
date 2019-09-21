@@ -2,15 +2,17 @@ import {
     FETCH_MY_POSTS,
     FETCH_ALL_POSTS,
     CREATE_POST,
-    CREATE_COMMENT,
     UPDATE_POST,
+    UPDATE_POST_LIKE,
     DELETE_POST,
+    CREATE_COMMENT,
     UPDATE_COMMENT,
     DELETE_COMMENT
 } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
-    posts: []
+    posts: [],
+    error: null
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -27,6 +29,7 @@ export default (state = INITIAL_STATE, action) => {
                 };
         case CREATE_POST:
         case UPDATE_POST:
+        case UPDATE_POST_LIKE:
         case DELETE_POST:
         case CREATE_COMMENT:
         case UPDATE_COMMENT:
